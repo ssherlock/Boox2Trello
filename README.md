@@ -173,38 +173,40 @@ remainingQuota;
 ```
 So what the above is basically doing is taking any file beginning with **trello_** and converting it to a Google Doc (with does the magic OCR) before taking the body of said doc and parsing it, splitting the text on the : so that we get a card title and card description field. This processing is shown in the function below where it also creates the email that will be sent to Trello. Note the subject line has #DRAFT (for allocating the label) and @simon932 to indicate the initial user to allocate the ticket to.  Chnage these to suit your needs (especially the user name!)
 ```
-function processTextToParse(boardName, emailAdddressToUse, textToParse) {
+  function processTextToParse(boardName, emailAdddressToUse, textToParse) {
     let processed = false;
     if (boardName !== null && emailAdddressToUse !== null && textToParse !== null) {
-
-        // Split the string on the : character.
-        var parts = textToParse.split(':');
-
-        try {
-            for (var i = 0; i < parts.length; i += 2) {
-                if (parts[i] !== '' && parts[i + 1] !== undefined) {
-                    let subject = parts[i] + " #DRAFT @simon932";
-                    sendEmail(emailAdddressToUse, subject, parts[i + 1]);
-                    processed = true;
-                }
-            }
-        } catch (e) {
-            processed = false;
-            Logger.log("An error occured and processing stopped. boardName: " + boardName + " emailAddressToUse: " + emailAdddressToUse + " textToParse: " + textToParse);
-            Logger.log("Exception thrown: " + e.message);
-            var remainingQuota = MailApp.getRemainingDailyQuota();
-            Logger.log("Remaining Email Quota: " + remainingQuota);
+  
+      // Split the string on the : character.
+      var parts = textToParse.split(':');
+  
+      try {
+        for (var i = 0; i < parts.length; i += 2) {
+          if (parts[i] !== '' && parts[i + 1] !== undefined) {
+            let subject = parts[i] + " #DRAFT @simon932";
+            // Remove a newline and replace with a space (for multi-line tickets)
+            let description = parts[i + 1].replace(/\n/g, " ");
+            sendEmail(emailAdddressToUse, subject, description);
+            processed = true;
+          }
         }
-    } else {
+      } catch (e) {
+        processed = false;
         Logger.log("An error occured and processing stopped. boardName: " + boardName + " emailAddressToUse: " + emailAdddressToUse + " textToParse: " + textToParse);
+        Logger.log("Exception thrown: " + e.message);
+        var remainingQuota = MailApp.getRemainingDailyQuota();
+        Logger.log("Remaining Email Quota: " + remainingQuota);
+      }
+    } else {
+      Logger.log("An error occured and processing stopped. boardName: " + boardName + " emailAddressToUse: " + emailAdddressToUse + " textToParse: " + textToParse);
     }
-
+  
     // Get the remaining quota. 
     var remainingQuota = MailApp.getRemainingDailyQuota();
     Logger.log("Remaining Email Quota: " + remainingQuota);
-
+    
     return processed;
-}
+  }
 ```
 The getEmailAddress function is a bit clunky as I have created a line for each board name that exists and matched the correct Trello email address to it.  Rememner that the email addresses come from Trello and will differ for each board you have.
 ```

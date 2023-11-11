@@ -1,4 +1,4 @@
-function processForTrelloTrigger() {
+  function processForTrelloTrigger() {
     //Check for new file in folder
     // Get the directory that you want to list the files in.
     var directory = DriveApp.getFolderById('1Z4GIsZnvm-PyDad9NYqO_r4yi6aaHRw8u');
@@ -34,12 +34,11 @@ function processForTrelloTrigger() {
         let subject = "Trello Cards Created in " + boardName;
         var remainingQuota = MailApp.getRemainingDailyQuota();
         body = "Processing completed. Remaing number of emails for the day: " + remainingQuota;
-        sendEmail("<your_email_address>@gmail.com", subject, body);
+        sendEmail("simon.sherlock@gmail.com", subject, body);
         
         //Once done delete file (PDF only or will lose the script!) so directory is empty
         if (file.getName().indexOf("trello_") === 0) {
           let newName = "old_" + file.getName();
-          // file.setTrashed(true);
           Logger.log("File being renamed to: " + newName);
           file.setName(newName);
         }
@@ -58,17 +57,19 @@ function processForTrelloTrigger() {
         for (var i = 0; i < parts.length; i += 2) {
           if (parts[i] !== '' && parts[i + 1] !== undefined) {
             let subject = parts[i] + " #DRAFT @simon932";
-            sendEmail(emailAdddressToUse, subject, parts[i + 1]);
+            // Remove a newline and replace with a space (for multi-line tickets)
+            let description = parts[i + 1].replace(/\n/g, " ");
+            sendEmail(emailAdddressToUse, subject, description);
             processed = true;
           }
         }
-        } catch (e) {
-          processed = false;
-          Logger.log("An error occured and processing stopped. boardName: " + boardName + " emailAddressToUse: " + emailAdddressToUse + " textToParse: " + textToParse);
-          Logger.log("Exception thrown: " + e.message);
-          var remainingQuota = MailApp.getRemainingDailyQuota();
-          Logger.log("Remaining Email Quota: " + remainingQuota);
-        }
+      } catch (e) {
+        processed = false;
+        Logger.log("An error occured and processing stopped. boardName: " + boardName + " emailAddressToUse: " + emailAdddressToUse + " textToParse: " + textToParse);
+        Logger.log("Exception thrown: " + e.message);
+        var remainingQuota = MailApp.getRemainingDailyQuota();
+        Logger.log("Remaining Email Quota: " + remainingQuota);
+      }
     } else {
       Logger.log("An error occured and processing stopped. boardName: " + boardName + " emailAddressToUse: " + emailAdddressToUse + " textToParse: " + textToParse);
     }
