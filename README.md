@@ -16,7 +16,8 @@ Make sure that **Enable notes sync (export)** is turned On and from now on all n
 
 You can go ahead and test this by editing a note then checking on Google Drive to see if it has synced.  For me the folder structure on Google Drive is as follows, but it may vary depending on the firmware version (odd I know but it changed for me when I upgraded to the latest).
 
-![Screenshot from 2023-11-05 08-58-54](https://github.com/ssherlock/Boox2Trello/assets/501364/1914f5b8-1cde-460d-8c47-a11daf307710)
+![GoogleDrivelayout](https://github.com/ssherlock/Boox2Trello/assets/501364/801100ff-17ba-4b9e-8953-f507e7eaefab)
+
 
 ## Trello
 Trello - https://trello.com/ - is a web based tool for creating jobs and lists and also for Kanban style projects.  It has a free tier but also a premium one which adds a LOT of functionality.  For what we are doing here the free one is fine.
@@ -25,17 +26,20 @@ Create a new board, calling it whatever your latest project might be.
 
 The default Kanban style board will be created with 3 lists; To do, Doing and Done but you can add more and/or rename these as you wish.
 
-![Screenshot from 2023-11-05 09-12-32](https://github.com/ssherlock/Boox2Trello/assets/501364/4df09265-47b3-430c-97f2-ad4bd928da10)
+![TrelloDefaultKanban](https://github.com/ssherlock/Boox2Trello/assets/501364/64923240-b846-433b-85ec-704da06ecd05)
+
 
 Before we start the scripting part, grab the email address that will be used for emailing in our OCR’ed jobs to add to the To Do list.
 
 Click on the ellipsis menu on the top right of the Trello page. 
 
-![Screenshot from 2023-11-05 09-13-39](https://github.com/ssherlock/Boox2Trello/assets/501364/bb28ffd7-9124-41e4-a8be-6aa4cc1249c8)
+![TrelloEllipsis](https://github.com/ssherlock/Boox2Trello/assets/501364/f303d6d3-6bde-494b-8927-a54895a0a322)
+
 
 This will give you a dropdown menu that gives you a lot of features
 
-![Screenshot from 2023-11-05 09-14-31](https://github.com/ssherlock/Boox2Trello/assets/501364/cab7218e-ee47-4e15-9b29-741afed049ca)
+![TrelloDropDownMenu](https://github.com/ssherlock/Boox2Trello/assets/501364/79fab6f6-6964-45b0-b2c8-5bdedf4ff756)
+
 
 Choose **Email-to-board** that gives you an email address that can be used for creating trello cards from an email. Take note of the email address and also check that new cards will be produced in the list you want as well.  The email address will follow this format:  
 
@@ -45,7 +49,7 @@ Note the bit in bold as this is your username and will be used in the script
 
 Creating labels is also a good idea as it makes it easier to spot which cards are more important than others.  I use Draft as a label so I can quickly see the newest cards and check that the OCR worked etc.  It can also be used to indicate a card needs assigning to other users and so on
 
-![Screenshot from 2023-11-05 09-58-40](https://github.com/ssherlock/Boox2Trello/assets/501364/918829b6-c70a-4161-8416-ab80ee3976b3)
+![TrelloLabels](https://github.com/ssherlock/Boox2Trello/assets/501364/4af6ef94-381a-4487-8b38-cf2df1381962)
 
 Now we are ready to test this before creating the script so you know you have the correct bits of information and that emailing it creates a card as you want.
 
@@ -56,7 +60,8 @@ In your email client create a mail to the email address you got above, and put t
 
 For the subject you can add whatever you like as that will become the description for the card.  Once sent it will take a while to process but the card should appear on your board, similar to
 
-![Screenshot from 2023-11-05 10-39-48](https://github.com/ssherlock/Boox2Trello/assets/501364/fd111d3d-c3b1-412c-a60f-644558108dab)
+![TrelloDraftCard](https://github.com/ssherlock/Boox2Trello/assets/501364/bb5903b6-c26c-48b3-b603-1a140560e847)
+
 
 If you click on the card it will give more detail and from there you can change who it is allocated to, the label and add more text etc.
 
@@ -71,7 +76,9 @@ In Google Drive I created a new directory called Trello under my notes backup st
 
 I then created a new AppScript within the Notepads folder 
 
-![Screenshot from 2023-11-05 11-23-45](https://github.com/ssherlock/Boox2Trello/assets/501364/8373eda9-7a7b-4a1a-a9b1-1f140e22c624)
+![Appscript1](https://github.com/ssherlock/Boox2Trello/assets/501364/308876b9-e7de-461d-a2b0-5d1083a45ff0)
+
+
 
 The script can be named what you like but I went with **Trello Processing** though I called the function *moveTrelloFilesTrigger* as it will be triggered at certain times.
 
@@ -102,16 +109,19 @@ Gets the directory identifier for where your files get synced to (**My drive > o
 Loops through all the files in that directory processing only those prefixed with *trello_*  and moving them to the **Trello** folder
 
 You can, of course, run this script whenever you like but for automating it I created a trigger to run it every 5 minutes.
-![Screenshot from 2023-11-05 11-39-28](https://github.com/ssherlock/Boox2Trello/assets/501364/882ffca7-8730-4fd7-8fca-a2926f74fc6e)
+![AppscriptTrigger](https://github.com/ssherlock/Boox2Trello/assets/501364/bad404ab-e0ed-441f-a1f1-1f3279888844)
+
 
 From here click the **Create trigger** button and fill in the required details as follows (or to suit yourself)
-![Screenshot from 2023-11-05 11-40-39](https://github.com/ssherlock/Boox2Trello/assets/501364/b9993df2-6de1-43c2-9bae-5e26b42f07d0)
+![TriggerProcessing](https://github.com/ssherlock/Boox2Trello/assets/501364/a8477bef-5389-4237-82be-6ec605f16b51)
+
 
 Once this is up and running then any files following the format of *trello_<boardName>.pdf* will be moved into the Trello folder for actual processing.  For example, **trello_Test.pdf** will parse lines in the file creating a card for each and placing it on the Test board within Trello
 
 Before going into detail on what this script does, this is an example of the file being processed.  In this example two cards should be produced on Trello; Test 2 and Test 3:
 
-![Screenshot from 2023-11-05 11-56-31](https://github.com/ssherlock/Boox2Trello/assets/501364/e1e98f7a-9009-40c1-b285-8f3b25adb921)
+![BooxSourceFile](https://github.com/ssherlock/Boox2Trello/assets/501364/24fc6713-0d06-40dc-a34c-94464de116b4)
+
 
 Breaking this down we have the following format with : being used as a separator
 
